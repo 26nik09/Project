@@ -40,3 +40,7 @@ X-Admin-Token: <token>
 - Master profile CRUD with media (max 10 assets).
 - Search/filter/sort/pagination over profiles.
 - Booking request creation and chat thread persistence.
+
+## Notes
+
+- The app uses FastAPI lifespan startup instead of deprecated `@app.on_event("startup")`, so you should not see that deprecation warning in current code.
