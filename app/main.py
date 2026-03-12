@@ -5,6 +5,7 @@ from fastapi import FastAPI
 from app.api.admin import router as admin_router
 from app.api.taxonomy import router as taxonomy_router
 from app.db import Base, engine
+from app.webapp import router as webapp_router
 
 
 @asynccontextmanager
@@ -18,6 +19,7 @@ app = FastAPI(title="Home Services Bot Backend", version="0.1.0", lifespan=lifes
 
 app.include_router(admin_router)
 app.include_router(taxonomy_router)
+app.include_router(webapp_router)
 
 
 @app.get("/health")

@@ -28,6 +28,7 @@ python -m app.bot.run
 ## Admin API authentication
 
 Set `ADMIN_TOKEN` in `.env` (defaults to `change-me`).
+Set `WEBAPP_URL` in `.env` (defaults to `http://localhost:8000/webapp`).
 
 Send header:
 
@@ -44,3 +45,9 @@ X-Admin-Token: <token>
 ## Notes
 
 - The app uses FastAPI lifespan startup instead of deprecated `@app.on_event("startup")`, so you should not see that deprecation warning in current code.
+
+
+## Telegram WebApp
+
+- Open `http://localhost:8000/webapp` in browser for local preview.
+- In Telegram, after onboarding, press **Open Web App** button.

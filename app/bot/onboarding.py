@@ -2,7 +2,17 @@ from aiogram import F, Router
 from aiogram.filters import CommandStart
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
-from aiogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup, Message
+from aiogram.types import (
+    CallbackQuery,
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+    KeyboardButton,
+    Message,
+    ReplyKeyboardMarkup,
+    WebAppInfo,
+)
+
+from app.config import settings
 
 router = Router(name="onboarding")
 
@@ -25,6 +35,14 @@ def adult_confirmation_kb(lang: str) -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text=text, callback_data="adult:yes")]])
 
 
+def webapp_kb(lang: str) -> ReplyKeyboardMarkup:
+    button_text = "Open Web App" if lang == "en" else "वेब ऐप खोलें"
+    return ReplyKeyboardMarkup(
+        keyboard=[[KeyboardButton(text=button_text, web_app=WebAppInfo(url=settings.webapp_url))]],
+        resize_keyboard=True,
+    )
+
+
 @router.message(CommandStart())
 async def start(message: Message, state: FSMContext) -> None:
     await state.set_state(OnboardingStates.choose_language)
@@ -45,7 +63,7 @@ async def set_language(callback: CallbackQuery, state: FSMContext) -> None:
 async def confirm_adult(callback: CallbackQuery, state: FSMContext) -> None:
     data = await state.get_data()
     lang = data.get("language", "en")
-    done = "Onboarding completed." if lang == "en" else "ऑनबोर्डिंग पूरी हुई।"
+    done = "Onboarding completed. Open the app below." if lang == "en" else "ऑनबोर्डिंग पूरी हुई। नीचे ऐप खोलें।"
     await state.clear()
-    await callback.message.answer(done)
+    await callback.message.answer(done, reply_markup=webapp_kb(lang))
     await callback.answer()
